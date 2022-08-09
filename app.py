@@ -11,8 +11,8 @@ async def on_startup(dispatcher):
     await set_default_commands(dispatcher)
 
     # Ma'lumotlar bazasini yaratamiz:
-    try:
-        db.create_table_users()
+    try: 
+        db.create_products()
     except Exception as err:
         print(err)
 
