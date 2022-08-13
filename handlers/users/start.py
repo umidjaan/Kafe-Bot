@@ -6,10 +6,12 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from data.config import ADMINS
 from loader import dp, db, bot
 from keyboards.default.main_menu import asosiy
+from aiogram.dispatcher import FSMContext
 
 
 @dp.message_handler(CommandStart(), state="*")
-async def bot_start(message: types.Message):
+async def bot_start(message: types.Message, state: FSMContext):
+    await state.finish()
     name = message.from_user.full_name
     # Foydalanuvchini bazaga qo'shamiz
     try:

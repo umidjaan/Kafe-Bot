@@ -5,3 +5,7 @@ class Kafe(StatesGroup):
     cats = State()
     sub_cat = State()
     product = State()
+    amount = State()
+    savat = State()
+    phone = State()
+    location = State()

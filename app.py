@@ -12,7 +12,7 @@ async def on_startup(dispatcher):
 
     # Ma'lumotlar bazasini yaratamiz:
     try: 
-        db.create_products()
+        db.create_order()
     except Exception as err:
         print(err)
 
