@@ -158,6 +158,23 @@ class Database:
         """
         return self.execute(sql, (tg_id, ), fetchall=True)
 
+    def get_order(self, tg_id):
+        sql = """
+        SELECT * FROM Orders WHERE tg_id=?
+        """
+        return self.execute(sql, (tg_id, ), fetchone=True)
+
+    def get_next_order(self, tg_id, order_id):
+        sql = """
+        SELECT * FROM Orders WHERE tg_id=? AND id > ?;
+        """
+        return self.execute(sql, (tg_id, order_id), fetchone=True)
+
+    def get_prev_order(self, tg_id, order_id):
+        sql = """
+        SELECT * FROM Orders WHERE tg_id=? AND id < ?;
+        """
+        return self.execute(sql, (tg_id, order_id), fetchall=True)
 
     def select_all_users(self):
         sql = """
