@@ -1,7 +1,7 @@
 from loader import dp, db
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from keyboards.inline.next_prev import markup
+from keyboards.inline.next_prev import create_markup
 
 
 @dp.message_handler(text="📦 Buyurtmalarim")
@@ -11,7 +11,7 @@ async def get_my_orders(message: types.Message, state: FSMContext):
         await state.update_data(
             {'order_id': order[0]}
         )
-        await message.answer(text=f"<b>Burutma raqami: №{order[0]}</b>\n\n" + order[2] + f"\n<b>Umumiy: {order[3]}</b>", reply_markup=markup)
+        await message.answer(text=f"<b>Burutma raqami: №{order[0]}</b>\n\n" + order[2] + f"\n<b>Umumiy: {order[3]}</b>", reply_markup=create_markup(order_id=order[0]))
     else:
         await message.answer("❌ Hozircha Sizning buyurtmalaringiz yo'q")
 
@@ -23,7 +23,7 @@ async def get_next_order(call: types.CallbackQuery, state: FSMContext):
 
     next = db.get_next_order(tg_id=call.from_user.id, order_id=order_id)
     if next:
-        await call.message.edit_text(text=f"<b>Burutma raqami: №{next[0]}</b>\n\n" + next[2] + f"\n<b>Umumiy: {next[3]}</b>", reply_markup=markup)
+        await call.message.edit_text(text=f"<b>Burutma raqami: №{next[0]}</b>\n\n" + next[2] + f"\n<b>Umumiy: {next[3]}</b>", reply_markup=create_markup(order_id=next[0]))
 
         await state.update_data(
             {'order_id': next[0]}
@@ -40,7 +40,7 @@ async def get_prev_order(call: types.CallbackQuery, state: FSMContext):
     prevs = db.get_prev_order(tg_id=call.from_user.id, order_id=order_id)
     if prevs:
         prev = prevs[-1]
-        await call.message.edit_text(text=f"<b>Burutma raqami: №{prev[0]}</b>\n\n" + prev[2] + f"\n<b>Umumiy: {prev[3]}</b>", reply_markup=markup)
+        await call.message.edit_text(text=f"<b>Burutma raqami: №{prev[0]}</b>\n\n" + prev[2] + f"\n<b>Umumiy: {prev[3]}</b>", reply_markup=create_markup(order_id=prev[0]))
 
         await state.update_data(
             {'order_id': prev[0]}

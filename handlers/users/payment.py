@@ -5,6 +5,8 @@ from data.config import ADMINS
 from loader import dp, bot
 from data.products import macbook, FAST_SHIPPING, REGULAR_SHIPPING, PICKUP_SHIPPING
 from keyboards.inline.product_keys import build_keyboard
+from aiogram.dispatcher import FSMContext
+
 
 @dp.message_handler(Command("macbook"))
 async def show_invoices(message: types.Message):
@@ -43,9 +45,11 @@ async def choose_shipping(query: types.ShippingQuery):
                                         ok=True)
 
 @dp.pre_checkout_query_handler()
-async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery):
+async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery, state: FSMContext):
     await bot.answer_pre_checkout_query(pre_checkout_query_id=pre_checkout_query.id,
                                         ok=True)
+    data = await state.get_data()
+    print(data.get('pay_order_id'))
     await bot.send_message(chat_id=pre_checkout_query.from_user.id,
                            text="Xaridingiz uchun rahmat!")
     await bot.send_message(chat_id=ADMINS[0],
