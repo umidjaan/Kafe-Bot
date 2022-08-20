@@ -1,5 +1,6 @@
 from . import help
 from . import start
+from . import check
 from . import admin
 from . import payment
 from . import my_orders

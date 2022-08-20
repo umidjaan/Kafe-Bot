@@ -24,27 +24,31 @@ async def get_sub_cats(message: types.Message):
         for i in sub_cats:
             markup.insert(KeyboardButton(text=i[0]))
         markup.add(KeyboardButton(text="📥 Savatcha"), KeyboardButton(text="◀️ Orqaga"))
-        await message.answer(f"Choose subcategory", reply_markup=markup)
+        await message.answer(f"Kategoriyani tanlang", reply_markup=markup)
         await Kafe.next()
 
 
 @dp.message_handler(state=Kafe.sub_cat)
 async def get_all_prods(message: types.Message, state: FSMContext):
     sub_cat = message.text
-    sub_cat_id = db.get_sub_cat_id(name=sub_cat)[0]
-    products = db.select_all_products(sub_cat_id=sub_cat_id)
-    await state.update_data(
-        {'sub_cat_id': sub_cat_id}
-    )
-    if len(products) == 0:
-        await message.answer("Mahsulot topilmadi")
-    else:
-        markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-        for product in products:
-            markup.insert(KeyboardButton(text=str(product[0])))
-        markup.add(KeyboardButton(text="📥 Savatcha"), KeyboardButton(text="◀️ Orqaga"))
-        await message.answer(f"{sub_cat} ro'yhatidagi mahsulotlar", reply_markup=markup)
-        await Kafe.next()
+    try:
+        sub_cat_id = db.get_sub_cat_id(name=sub_cat)[0]
+        products = db.select_all_products(sub_cat_id=sub_cat_id)
+        await state.update_data(
+            {'sub_cat_id': sub_cat_id}
+        )
+        if len(products) == 0:
+            await message.answer("Mahsulot topilmadi")
+        else:
+            markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+            for product in products:
+                markup.insert(KeyboardButton(text=str(product[0])))
+            markup.add(KeyboardButton(text="📥 Savatcha"), KeyboardButton(text="◀️ Orqaga"))
+            await message.answer(f"{sub_cat} ro'yhatidagi mahsulotlar", reply_markup=markup)
+            await Kafe.next()
+    except TypeError:
+        await message.answer("Ma'lumot topilmadi")
+    
 
 
 @dp.message_handler(state=Kafe.product)
